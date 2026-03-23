@@ -56,7 +56,7 @@ To start off, I recommend using the `default-frontmatter` function to generate d
 
 ### Backmatter
 
-Similar to the `frontmatter`, the backmatter can also be configured using the `default-backmatter` function, taking the following arguments.
+Similar to the `frontmatter`, the backmatter can also be configured using the `default-backmatter` function, taking the following arguments:
 
 - `bibliography (content)`: The bibliography of the document. This should be set to Typst's default `bibliography` with the path to your bibliography file as an argument.
 - `bib-style (str)`: The bibliography and citation style this document should use.
