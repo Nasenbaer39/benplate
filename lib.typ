@@ -74,7 +74,7 @@
     ),
     header: context {
       // Check if header should be removed (page is empty)
-      if not state("content.switch", false).get() {
+      if not state("content.switch", false).get() or not in-body.get() {
         return
       }
 
@@ -272,7 +272,6 @@
   in-body.update(false)
 
   set page(numbering: "i")
-  set page(header: [])
 
   frontmatter
 
