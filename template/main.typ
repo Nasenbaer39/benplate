@@ -1,4 +1,4 @@
-#import "@local/thesis-template:0.1.0": thesis, accent-color, todo
+#import "@preview/benplate:0.1.0": thesis, accent-color, todo
 #import "frontmatter.typ": *
 #import "backmatter.typ": *
 
