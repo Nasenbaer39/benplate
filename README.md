@@ -2,7 +2,7 @@
 
 A [Typst](https://typst.app/) template for final theses, term papers and similar documents that can be easily customized to fit the requirements of your institution.
 
-## Getting Started {#getting-started}
+## Getting Started
 
 You can use this template in the Typst web editor by clicking "Start from Template" on the dashboard and searching for `benplate`.
 
@@ -61,7 +61,7 @@ Similar to the `frontmatter`, the backmatter can also be configured using the `d
 - `bibliography (content)`: The bibliography of the document. This should be set to Typst's default `bibliography` with the path to your bibliography file as an argument.
 - `bib-style (str)`: The bibliography and citation style this document should use.
 
-### Customization {#customization}
+### Customization
 
 I created the default functions above so that the final document adheres to certain requirements of my university. However, other institutions may impose different rules, or maybe you want to customize the document to fit your own style.
 
