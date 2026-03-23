@@ -1,4 +1,4 @@
-#import "@preview/hydra:0.6.1": hydra
+#import "@preview/hydra:0.6.2": hydra
 
 #import "src/frontmatter.typ": *
 #import "src/backmatter.typ": *
