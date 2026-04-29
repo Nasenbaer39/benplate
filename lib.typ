@@ -23,7 +23,7 @@
   let body-font = "IBM Plex Sans"
   let heading-font = "IBM Plex Serif"
   let caption-font = "IBM Plex Serif"
-  let math-font = "STIX Two Math"
+  let math-font = "Libertinus Math"
   let body-size = 11pt
   let h1-size = 22pt
   let h2-size = 14pt
@@ -43,6 +43,9 @@
   // Use measures to define text layout
   set text(font: body-font, size: body-size)
   show math.equation: set text(font: math-font, fallback: false)
+
+  // add slanted integrals if STIX Two Math is installed
+  show math.integral: text(font: ("STIX Two Math", math-font), $integral$)
 
 
   /*----[Fancy Hydra-Header]----*/
