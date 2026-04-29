@@ -1,7 +1,7 @@
 #let signature(
-  city:"",
-  date:none,
-  name:"",
+  city: "",
+  date: none,
+  name: "",
 ) = {
   grid(
     columns: (auto, auto),
@@ -11,7 +11,7 @@
     ],
     align(right)[
       #move(dy: 8pt, line(length: 100%, stroke: (thickness: 0.5pt)))
-      #move(dy: 2pt,name)
+      #move(dy: 2pt, name)
     ],
   )
 }
@@ -42,7 +42,7 @@
 
       #v(100pt)
       #signature(city: city, date: date, name: name)
-    ]
+    ],
   )
 
   pagebreak(weak: true, to: "odd")

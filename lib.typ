@@ -18,8 +18,6 @@
   backmatter: none,
   body,
 ) = {
-
-
   /*--------[Parameters]--------*/
 
   let body-font = "IBM Plex Sans"
@@ -59,7 +57,7 @@
         #it.body
       ],
       [#h(7pt)|#h(7pt)],
-      counter(page).display()
+      counter(page).display(),
     )
     v(5pt)
   }
@@ -81,17 +79,19 @@
       // select header type based on page number
       if calc.even(here().page()) {
         align(left, emph(hydra(1, display: (_, it) => {
-          custom-header("Chapter", rtl, it)   // Chapter title on the left of even pages
+          custom-header("Chapter", rtl, it) // Chapter title on the left of even pages
         })))
       } else {
-        align(right, emph(hydra(2, display: (_, it) => {
-            custom-header("Section", ltr, it)   // Section title on the right of odd pages
+        align(right, emph(hydra(
+          2,
+          display: (_, it) => {
+            custom-header("Section", ltr, it) // Section title on the right of odd pages
           },
-          skip-starting: false))
-        )
+          skip-starting: false,
+        )))
       }
     },
-    footer: []
+    footer: [],
   )
 
   set par(
@@ -115,9 +115,9 @@
     #if in-body.get() {
       v(30pt)
       let heading-number = text(
-          counter(heading).display(),
-          size: 26pt,
-        )
+        counter(heading).display(),
+        size: 26pt,
+      )
       box[
         #set align(horizon)
         #stack(
@@ -133,19 +133,20 @@
     #v(30pt)
   ]
 
-  show heading.where(level: 2): it => {text(size: h2-size, it)}
-  show heading.where(level: 3): it => {text(size: h3-size, it)}
-  show heading.where(level: 4): it => {text(size: h4-size, weight: "semibold", it.body) + h(1em)}
-  show heading.where(level: 5): it => {text(size: h4-size, weight: "semibold", it.body)}
+  show heading.where(level: 2): it => { text(size: h2-size, it) }
+  show heading.where(level: 3): it => { text(size: h3-size, it) }
+  show heading.where(level: 4): it => { text(size: h4-size, weight: "semibold", it.body) + h(1em) }
+  show heading.where(level: 5): it => { text(size: h4-size, weight: "semibold", it.body) }
 
 
   /*----------[Figures]---------*/
 
-  set figure(numbering: (..n) => {
+  set figure(
+    numbering: (..n) => {
       counter(figure.where(kind: "subfigure")).update(0)
       numbering("1.1", ..n)
     },
-    placement: auto
+    placement: auto,
   )
 
   show figure.where(kind: "code"): set figure(supplement: [Algorithm])
@@ -173,15 +174,16 @@
           // don't display separator if it's a subfigure
           strong[#it.supplement #it.counter.display(it.numbering) ]
         } else {
-          strong[#it.supplement #numbering(it.numbering,
-            ..counter(heading.where(level: 1)).at(here()),
-            ..counter(figure.where(kind: it.kind)).at(here())
-          )#it.separator]
+          strong[#it.supplement #numbering(
+              it.numbering,
+              ..counter(heading.where(level: 1)).at(here()),
+              ..counter(figure.where(kind: it.kind)).at(here()),
+            )#it.separator]
         }
         emph(it.body)
 
         // add spacing between mainfigure caption and subfigure
-        if it.kind == "subfigure" {v(0.75em)}
+        if it.kind == "subfigure" { v(0.75em) }
       }
     })
   }
@@ -191,8 +193,8 @@
 
   // Setup custom numbering of math functions: (chapter.number)
   set math.equation(number-align: bottom + end, supplement: none, numbering: num => {
-      let count = counter(heading.where(level: 1)).get().first()
-      numbering("(1.1)", count, num)
+    let count = counter(heading.where(level: 1)).get().first()
+    numbering("(1.1)", count, num)
   })
 
 
@@ -210,32 +212,38 @@
 
     if e == none {
       it
-    // reference figures as "Fig. {chapter}.{figure}[subfigure]"
+      // reference figures as "Fig. {chapter}.{figure}[subfigure]"
     } else if e.func() == figure {
       if e.kind == "subfigure" {
         let q = query(figure.where(outlined: true).before(it.target)).last()
         // display mainfigure and subfigure counter after each other if subfigure is referenced
-        [Figure~] + link(
-          e.location(),
-          numbering(q.numbering,
-            ..counter(heading.where(level: 1)).at(e.location()),
-            ..counter(figure.where(kind: q.kind)).at(q.location())
-          ) +
-          numbering("a", ..counter(figure.where(kind: "subfigure")).at(e.location()))
+        (
+          [Figure~]
+            + link(
+              e.location(),
+              numbering(
+                q.numbering,
+                ..counter(heading.where(level: 1)).at(e.location()),
+                ..counter(figure.where(kind: q.kind)).at(q.location()),
+              )
+                + numbering("a", ..counter(figure.where(kind: "subfigure")).at(e.location())),
+            )
         )
       } else {
-        if e.kind == "code" [Algorithm~] else if e.kind == table [Table~] else [Figure~] + link(e.location(),
-          numbering(e.numbering,
-            ..counter(heading.where(level: 1)).at(e.location()),
-            ..counter(figure.where(kind: e.kind)).at(e.location())
-          )
+        (
+          if e.kind == "code" [Algorithm~] else if e.kind == table [Table~] else [Figure~]
+            + link(e.location(), numbering(
+              e.numbering,
+              ..counter(heading.where(level: 1)).at(e.location()),
+              ..counter(figure.where(kind: e.kind)).at(e.location()),
+            ))
         )
       }
-    // color equation numbering, but not parentheses
+      // color equation numbering, but not parentheses
     } else if e.func() == math.equation {
       show regex("[^()]+"): set text(accent-color)
       it
-    // reference l1 headers has "Chapter" and all others as "Section"
+      // reference l1 headers has "Chapter" and all others as "Section"
     } else if e.func() == heading {
       if e.level == 1 [Chapter~] else [Section~]
       link(e.location(), numbering(e.numbering, ..counter(heading).at(e.location())))
@@ -258,16 +266,16 @@
 
     // Start chapter headings on a new page
     state("content.switch").update(false)
-    pagebreak(weak: true, to:"odd")
+    pagebreak(weak: true, to: "odd")
     state("content.switch").update(true)
 
     it
   }
 
 
-   //===========================//
+  //===========================//
   //------ Front Matter -------//
- //===========================//
+  //===========================//
 
   in-body.update(false)
 
@@ -276,9 +284,9 @@
   frontmatter
 
 
-   //===========================//
+  //===========================//
   //----------- Body ----------//
- //===========================//
+  //===========================//
 
   in-body.update(true)
 
@@ -294,9 +302,9 @@
   body
 
 
-   //===========================//
+  //===========================//
   //--------- Appendix --------//
- //===========================//
+  //===========================//
 
   set heading(numbering: "A.1")
 
@@ -305,9 +313,9 @@
   appendix
 
 
-   //===========================//
+  //===========================//
   //------- Back Matter -------//
- //===========================//
+  //===========================//
 
   in-body.update(false)
 

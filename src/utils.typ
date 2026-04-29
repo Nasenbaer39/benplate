@@ -27,7 +27,7 @@
 
 /*------[Helper Functions]------*/
 
-#let prose = (citation) => {
+#let prose = citation => {
   set cite(form: "prose")
   citation
 }
