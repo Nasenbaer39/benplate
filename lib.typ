@@ -31,7 +31,6 @@
   let h4-size = body-size
   let caption-size = 10pt
 
-
   /*-----[General Settings]-----*/
 
   set document(title: title, author: author, date: date)
@@ -46,7 +45,6 @@
 
   // add slanted integrals if STIX Two Math is installed
   show math.integral: text(font: ("STIX Two Math", math-font), $integral$)
-
 
   /*----[Fancy Hydra-Header]----*/
 
@@ -67,6 +65,30 @@
     v(5pt)
   }
 
+  /*-------[Page Helpers]-------*/
+
+  // Whether the page belongs to the body (incl. appendix)
+  let is-body-page(page-num) = {
+    let start = query(<benplate-body-start>).first().location().page()
+    let end = query(<benplate-body-end>).first().location().page()
+    start <= page-num and page-num <= end
+  }
+
+  // Whether the page was left blank by a page break to the next odd page
+  let is-blank-page(page-num) = {
+    let chapters = query(heading.where(level: 1))
+    let next = chapters.position(h => h.location().page() > page-num)
+    if next == none { return false }
+
+    // Only consider breaks between the previous and the next chapter
+    let next-loc = chapters.at(next).location()
+    let breaks = selector(<benplate-break>).before(next-loc)
+    if next > 0 { breaks = breaks.after(chapters.at(next - 1).location()) }
+
+    let break-pages = query(breaks).map(m => m.location().page()).filter(p => p < next-loc.page())
+    break-pages.len() > 0 and break-pages.last() < page-num
+  }
+
   set page(
     paper: "a4",
     margin: (
@@ -76,8 +98,10 @@
       outside: 3cm,
     ),
     header: context {
-      // Check if header should be removed (page is empty)
-      if not state("content.switch", false).get() or not in-body.get() {
+      // Only show headers on non-empty pages of the body, except where a chapter starts
+      let page-num = here().page()
+      let chapter-start = query(heading.where(level: 1)).any(h => h.location().page() == page-num)
+      if not is-body-page(page-num) or is-blank-page(page-num) or chapter-start {
         return
       }
 
@@ -96,14 +120,19 @@
         )))
       }
     },
-    footer: [],
+    // Show page numbers in the footer outside the body, where there is no header
+    footer: context {
+      let page-num = here().page()
+      if page.numbering == none or is-body-page(page-num) or is-blank-page(page-num) { return }
+
+      align(center, counter(page).display())
+    },
   )
 
   set par(
     spacing: 1.5em,
     justify: true,
   )
-
 
   /*---------[Headings]---------*/
 
@@ -142,7 +171,6 @@
   show heading.where(level: 3): it => { text(size: h3-size, it) }
   show heading.where(level: 4): it => { text(size: h4-size, weight: "semibold", it.body) + h(1em) }
   show heading.where(level: 5): it => { text(size: h4-size, weight: "semibold", it.body) }
-
 
   /*----------[Figures]---------*/
 
@@ -196,12 +224,10 @@
     })
   }
 
-
   /*---------[Equations]--------*/
 
   // Setup custom numbering of math functions: (chapter.number)
   set math.equation(number-align: bottom + end, supplement: none, numbering: in-chapter("(C.1)"))
-
 
   /*--------[References]--------*/
 
@@ -243,7 +269,6 @@
     }
   }
 
-
   /*-------[Chapter Start]------*/
 
   show heading.where(level: 1): it => {
@@ -256,13 +281,11 @@
     counter(math.equation).update(0)
 
     // Start chapter headings on a new page
-    state("content.switch").update(false)
+    [#metadata(none) <benplate-break>]
     pagebreak(weak: true, to: "odd")
-    state("content.switch").update(true)
 
     it
   }
-
 
   //===========================//
   //------ Front Matter -------//
@@ -274,12 +297,15 @@
 
   frontmatter
 
+  [#metadata(none) <benplate-break>]
+  pagebreak(weak: true, to: "odd")
 
   //===========================//
   //----------- Body ----------//
   //===========================//
 
   in-body.update(true)
+  [#metadata(none) <benplate-body-start>]
 
   set page(numbering: "1")
   set heading(numbering: "1.1")
@@ -292,7 +318,6 @@
 
   body
 
-
   //===========================//
   //--------- Appendix --------//
   //===========================//
@@ -304,14 +329,12 @@
 
   appendix
 
+  [#metadata(none) <benplate-body-end>]
+  in-body.update(false)
 
   //===========================//
   //------- Back Matter -------//
   //===========================//
-
-  in-body.update(false)
-
-  set page(header: [])
 
   backmatter
 }

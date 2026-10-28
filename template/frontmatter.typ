@@ -16,23 +16,28 @@
   abstract: [],
   acknowledgments: [],
 ) = {
-  titlepage(
-    university: university,
-    faculty: faculty,
-    field: field,
-    type: type,
-    author: author,
-    date: date,
-    advisor: advisor,
-    first-reviewer: first-reviewer,
-    second-reviewer: second-reviewer,
-  )
+  // The title page, declaration and the blank pages after them aren't numbered
+  {
+    set page(numbering: none)
 
-  declaration-of-authorship(
-    city: city,
-    date: date,
-    name: author,
-  )
+    titlepage(
+      university: university,
+      faculty: faculty,
+      field: field,
+      type: type,
+      author: author,
+      date: date,
+      advisor: advisor,
+      first-reviewer: first-reviewer,
+      second-reviewer: second-reviewer,
+    )
+
+    declaration-of-authorship(
+      city: city,
+      date: date,
+      name: author,
+    )
+  }
 
   counter(page).update(1)
 

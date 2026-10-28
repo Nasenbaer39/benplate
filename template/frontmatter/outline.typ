@@ -13,6 +13,4 @@
 
   // Show outline
   outline(depth: 3)
-
-  pagebreak(weak: true, to: "odd")
 }

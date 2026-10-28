@@ -13,7 +13,6 @@
   set par(leading: 15pt)
   page(
     margin: (left: 40mm, right: 40mm, top: 50mm, bottom: 50mm),
-    numbering: none,
   )[
     #text(fill: rgb(165, 28, 48), 20pt)[#university]\
     #text(weight: "semibold", 15pt)[
