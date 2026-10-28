@@ -55,7 +55,9 @@
     stack(
       dir: dir,
       [
-        *#title #numbering(it.numbering, ..counter(heading).at(it.location()))*
+        #if it.numbering != none [
+          *#title #numbering(it.numbering, ..counter(heading).at(it.location()))*
+        ]
         #h(7pt)
         #it.body
       ],
@@ -115,7 +117,7 @@
     #set text(size: h1-size, weight: "medium", font: heading-font)
     #set align(right)
 
-    #if in-body.get() {
+    #if in-body.get() and it.numbering != none {
       v(30pt)
       let heading-number = text(
         counter(heading).display(),
@@ -248,8 +250,12 @@
       it
       // reference l1 headers has "Chapter" and all others as "Section"
     } else if e.func() == heading {
-      if e.level == 1 [Chapter~] else [Section~]
-      link(e.location(), numbering(e.numbering, ..counter(heading).at(e.location())))
+      if e.numbering == none {
+        link(e.location(), e.body)
+      } else {
+        if e.level == 1 [Chapter~] else [Section~]
+        link(e.location(), numbering(e.numbering, ..counter(heading).at(e.location())))
+      }
     } else {
       it
     }
