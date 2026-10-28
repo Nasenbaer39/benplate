@@ -146,13 +146,20 @@
 
   /*----------[Figures]---------*/
 
-  set figure(
-    numbering: (..n) => {
-      counter(figure.where(kind: "subfigure")).update(0)
-      numbering("1.1", ..n)
-    },
-    placement: auto,
-  )
+  // Number figures as (chapter).(figure), e.g. "2.1" in the body and "A.1" in the appendix
+  let chapter-numbering = state("chapter-numbering", "1")
+  let in-chapter(pattern) = (..n) => {
+    let chapter = counter(heading).get().first()
+    numbering(pattern.replace("C", chapter-numbering.get()), chapter, ..n)
+  }
+
+  set figure(numbering: in-chapter("C.1"), placement: auto)
+
+  // Restart subfigure numbering in every figure
+  show figure: it => {
+    if it.kind != "subfigure" { counter(figure.where(kind: "subfigure")).update(0) }
+    it
+  }
 
   show figure.where(kind: "code"): set figure(supplement: [Algorithm])
   show figure.where(kind: "subfigure"): set figure(supplement: [], numbering: "(a)", outlined: false, placement: none)
@@ -179,11 +186,7 @@
           // don't display separator if it's a subfigure
           strong[#it.supplement #it.counter.display(it.numbering) ]
         } else {
-          strong[#it.supplement #numbering(
-              it.numbering,
-              ..counter(heading.where(level: 1)).at(here()),
-              ..counter(figure.where(kind: it.kind)).at(here()),
-            )#it.separator]
+          strong[#it.supplement #it.counter.display(it.numbering)#it.separator]
         }
         emph(it.body)
 
@@ -197,10 +200,7 @@
   /*---------[Equations]--------*/
 
   // Setup custom numbering of math functions: (chapter.number)
-  set math.equation(number-align: bottom + end, supplement: none, numbering: num => {
-    let count = counter(heading.where(level: 1)).get().first()
-    numbering("(1.1)", count, num)
-  })
+  set math.equation(number-align: bottom + end, supplement: none, numbering: in-chapter("(C.1)"))
 
 
   /*--------[References]--------*/
@@ -217,33 +217,15 @@
 
     if e == none {
       it
-      // reference figures as "Fig. {chapter}.{figure}[subfigure]"
-    } else if e.func() == figure {
-      if e.kind == "subfigure" {
-        let q = query(figure.where(outlined: true).before(it.target)).last()
-        // display mainfigure and subfigure counter after each other if subfigure is referenced
-        (
-          [Figure~]
-            + link(
-              e.location(),
-              numbering(
-                q.numbering,
-                ..counter(heading.where(level: 1)).at(e.location()),
-                ..counter(figure.where(kind: q.kind)).at(q.location()),
-              )
-                + numbering("a", ..counter(figure.where(kind: "subfigure")).at(e.location())),
-            )
-        )
-      } else {
-        (
-          if e.kind == "code" [Algorithm~] else if e.kind == table [Table~] else [Figure~]
-            + link(e.location(), numbering(
-              e.numbering,
-              ..counter(heading.where(level: 1)).at(e.location()),
-              ..counter(figure.where(kind: e.kind)).at(e.location()),
-            ))
-        )
-      }
+      // reference subfigures as "Figure {chapter}.{figure}{subfigure}"
+    } else if e.func() == figure and e.kind == "subfigure" {
+      let parent = query(figure.where(outlined: true).before(e.location())).last()
+      let loc = parent.location()
+      [Figure~]
+      link(e.location(), {
+        numbering(chapter-numbering.at(loc) + ".1", counter(heading).at(loc).first(), ..parent.counter.at(loc))
+        numbering("a", ..e.counter.at(e.location()))
+      })
       // color equation numbering, but not parentheses
     } else if e.func() == math.equation {
       show regex("[^()]+"): set text(accent-color)
@@ -318,6 +300,7 @@
   set heading(numbering: "A.1")
 
   counter(heading).update(0)
+  chapter-numbering.update("A")
 
   appendix
 
