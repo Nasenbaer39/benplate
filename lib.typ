@@ -231,9 +231,9 @@
 
   /*--------[References]--------*/
 
-  // color name and date in citations
+  // Color the content of citations, but not the brackets and separators around it
   show cite: it => {
-    show regex("[\d\p{L}\s.]+"): set text(accent-color)
+    show regex("[^\[\](),;:]+"): set text(accent-color)
     it
   }
 

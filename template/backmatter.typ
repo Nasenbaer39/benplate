@@ -2,7 +2,7 @@
 
 #let default-backmatter(
   bibliography: [],
-  bib-style: "",
+  bib-style: "ieee",
 ) = {
   set std-bibliography(style: bib-style)
   bibliography
