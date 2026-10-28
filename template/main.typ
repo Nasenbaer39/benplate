@@ -9,6 +9,8 @@
   title: "Your Thesis Title",
   author: author,
   date: date,
+  lang: "en",
+  accent-color: accent-color,
   frontmatter: default-frontmatter(
     university: "Your University",
     faculty: "Your Faculty",
@@ -20,6 +22,7 @@
     advisor: "Your Advisor",
     first-reviewer: "Your First Reviewer",
     second-reviewer: "Your Second Reviewer",
+    accent-color: accent-color,
     abstract: todo[Write an abstract],
     acknowledgments: todo[Write your acknowledgments],
   ),

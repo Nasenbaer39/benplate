@@ -13,6 +13,13 @@
   title: "",
   author: "",
   date: datetime.today(),
+  lang: "en",
+  body-font: "IBM Plex Sans",
+  heading-font: "IBM Plex Serif",
+  caption-font: "IBM Plex Serif",
+  math-font: "Libertinus Math",
+  body-size: 11pt,
+  accent-color: accent-color,
   frontmatter: none,
   appendix: none,
   backmatter: none,
@@ -20,11 +27,6 @@
 ) = {
   /*--------[Parameters]--------*/
 
-  let body-font = "IBM Plex Sans"
-  let heading-font = "IBM Plex Serif"
-  let caption-font = "IBM Plex Serif"
-  let math-font = "Libertinus Math"
-  let body-size = 11pt
   let h1-size = 22pt
   let h2-size = 14pt
   let h3-size = body-size
@@ -35,12 +37,12 @@
 
   set document(title: title, author: author, date: date)
 
-  show std.title: it => text(font: "IBM Plex Serif", 17pt, weight: "regular", tracking: 1pt, upper(it))
+  show std.title: it => text(font: heading-font, 17pt, weight: "regular", tracking: 1pt, upper(it))
 
   let in-body = state("in-body", false)
 
   // Use measures to define text layout
-  set text(font: body-font, size: body-size)
+  set text(font: body-font, size: body-size, lang: lang)
   show math.equation: set text(font: math-font, fallback: false)
 
   // add slanted integrals if STIX Two Math is installed

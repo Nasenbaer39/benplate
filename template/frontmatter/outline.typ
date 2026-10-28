@@ -2,7 +2,7 @@
 
 #let default-outline() = {
   show outline.entry: outrageous.show-entry.with(
-    font: ("IBM Plex Sans", auto),
+    font: (auto,),
     vspace: (15pt, none),
   )
 

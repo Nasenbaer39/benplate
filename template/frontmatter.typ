@@ -13,6 +13,8 @@
   advisor: "",
   first-reviewer: "",
   second-reviewer: "",
+  accent-color: rgb(165, 28, 48),
+  date-format: "[day].[month].[year]",
   abstract: [],
   acknowledgments: [],
 ) = {
@@ -30,12 +32,15 @@
       advisor: advisor,
       first-reviewer: first-reviewer,
       second-reviewer: second-reviewer,
+      accent-color: accent-color,
+      date-format: date-format,
     )
 
     declaration-of-authorship(
       city: city,
       date: date,
       name: author,
+      date-format: date-format,
     )
   }
 

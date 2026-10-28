@@ -8,13 +8,15 @@
   advisor: "",
   first-reviewer: "",
   second-reviewer: "",
+  accent-color: rgb(165, 28, 48),
+  date-format: "[day].[month].[year]",
 ) = {
   set align(center + horizon)
   set par(leading: 15pt)
   page(
     margin: (left: 40mm, right: 40mm, top: 50mm, bottom: 50mm),
   )[
-    #text(fill: rgb(165, 28, 48), 20pt)[#university]\
+    #text(fill: accent-color, 20pt)[#university]\
     #text(weight: "semibold", 15pt)[
       Faculty of #faculty\
       Department of #field
@@ -32,7 +34,7 @@
     #v(40pt)
     submitted by\
     #author\
-    #date.display("[day].[month].[year]")
+    #date.display(date-format)
 
     #v(40pt)
 

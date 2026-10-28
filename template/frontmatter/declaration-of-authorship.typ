@@ -2,11 +2,12 @@
   city: "",
   date: none,
   name: "",
+  date-format: "[day].[month].[year]",
 ) = {
   grid(
     columns: (auto, auto),
     align(left)[
-      #city, #date.display("[month repr:long] [day], [year]")
+      #city, #date.display(date-format)
       #h(12pt)
     ],
     align(right)[
@@ -20,6 +21,7 @@
   city: "",
   date: none,
   name: "",
+  date-format: "[day].[month].[year]",
 ) = {
   set heading(outlined: false)
 
@@ -41,7 +43,7 @@
       I agree to make both versions of my thesis (with a passing grade) accessible to the public by having them added to the library of the Computer Science Department.
 
       #v(100pt)
-      #signature(city: city, date: date, name: name)
+      #signature(city: city, date: date, name: name, date-format: date-format)
     ],
   )
 
