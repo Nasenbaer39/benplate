@@ -20,9 +20,10 @@ This template uses the following selection of fonts:
 
 - [IBM Plex Serif](https://fonts.google.com/specimen/IBM+Plex+Serif)
 - [IBM Plex Sans](https://fonts.google.com/specimen/IBM+Plex+Sans)
-- [STIX Two Math](https://online-fonts.com/fonts/stix-two-math)
+- [Libertinus Math](https://github.com/alerque/libertinus) (ships with Typst)
+- [STIX Two Math](https://github.com/stipub/stixfonts) (optional, only used for slanted integral signs)
 
-If you use this template locally, you can install the fonts on your system via the links above. In case you're using the Typst web app, all fonts are available out of the box.
+If you use this template locally, you can install the fonts on your system via the links above. In case you're using the Typst web app, all fonts are available out of the box. All fonts can also be changed via the arguments of the `thesis` function.
 
 ## Usage
 
@@ -31,6 +32,13 @@ This template exports the `thesis` function, which takes the following named arg
 - `title (str)`: The title of the document.
 - `author (str)`: The author of the document.
 - `date (datetime)`: The creation date of the document. If not explicitly specified, `datetime.today()` is used.
+- `lang (str)`: The language of the document, used for hyphenation and Typst's built-in terms. Defaults to `"en"`.
+- `body-font (str)`: The font of the body text. Defaults to `"IBM Plex Sans"`.
+- `heading-font (str)`: The font of headings and the title. Defaults to `"IBM Plex Serif"`.
+- `caption-font (str)`: The font of figure captions. Defaults to `"IBM Plex Serif"`.
+- `math-font (str)`: The font of equations. Defaults to `"Libertinus Math"`.
+- `body-size (length)`: The size of the body text. Defaults to `11pt`.
+- `accent-color (color)`: The color of links, citations and equation references. Defaults to the exported `accent-color`.
 - `frontmatter (content)`: All content that should be included in front of the first chapter of the document.
 - `appendix (content)`: Optional content for the documents appendix.
 - `backmatter (content)`: All content that should be included at the end of the document.
@@ -51,6 +59,8 @@ To start off, I recommend using the `default-frontmatter` function to generate d
 - `advisor (str)`: The name of your advisor.
 - `first-reviewer (str)`: The name of your first reviewer.
 - `second-reviewer (str)`: The name of your second reviewer.
+- `accent-color (color)`: The color of the university name on the title page. Pass the same color as to `thesis`.
+- `date-format (str)`: The [format](https://typst.app/docs/reference/foundations/datetime/#format) of the dates on the title page and in the declaration. Defaults to `"[day].[month].[year]"`.
 - `abstract (content)`: The abstract of the document.
 - `acknowledgments (content)`: The acknowledgments of the document.
 
@@ -59,15 +69,15 @@ To start off, I recommend using the `default-frontmatter` function to generate d
 Similar to the `frontmatter`, the backmatter can also be configured using the `default-backmatter` function, taking the following arguments:
 
 - `bibliography (content)`: The bibliography of the document. This should be set to Typst's default `bibliography` with the path to your bibliography file as an argument.
-- `bib-style (str)`: The bibliography and citation style this document should use.
+- `bib-style (str)`: The bibliography and citation style this document should use. Defaults to `"ieee"`.
 
 ### Customization
 
 I created the default functions above so that the final document adheres to certain requirements of my university. However, other institutions may impose different rules, or maybe you want to customize the document to fit your own style.
 
-For that reason, the implementation of the `default-frontmatter` and `default-backmatter` functions is exposed when you initialize a new project as explained in the [getting started section](#getting-started). This should make it relatively straightforward to change these parts of the document.
+For that reason, the `default-frontmatter` and `default-backmatter` functions are not part of the package itself. Their implementation is copied into your project when you initialize it as explained in the [getting started section](#getting-started). This should make it relatively straightforward to change these parts of the document.
 
-In case you want to customize the other parts of the template, like the used fonts, paragraph spacing, heading styles, etc., you need to edit the template locally. This can be done by locating your [typst data directory](https://github.com/typst/packages/tree/main?tab=readme-ov-file#local-packages) and copying the contents of [this repository](https://github.com/Nasenbaer39/benplate) to `{data-dir}/typst/packages/local/benplate/0.1.0`. This will create a local copy of this template that you are free to edit.
+Fonts, the text size, the accent color and the language can be changed via the arguments of the `thesis` function. In case you want to customize the other parts of the template, like paragraph spacing, heading styles, etc., you need to edit the template locally. This can be done by locating your [typst data directory](https://github.com/typst/packages/tree/main?tab=readme-ov-file#local-packages) and copying the contents of [this repository](https://github.com/Nasenbaer39/benplate) to `{data-dir}/typst/packages/local/benplate/0.1.0`. This will create a local copy of this template that you are free to edit.
 
 If you believe that there are configuration options that should be available from the get go, feel free to open an issue on GitHub. This of course also applies to potential inconsistencies or bugs in the template.
 
