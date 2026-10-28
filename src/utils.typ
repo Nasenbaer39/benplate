@@ -18,8 +18,8 @@
 }
 
 #let comment(body, color: blue.darken(25%), initials: "") = {
-  math.attach(tl: initials)[]
-  inline-note(stroke: blue.darken(25%), par-break: false)[
+  if initials != "" { super(text(fill: color, weight: "bold", initials)) }
+  inline-note(stroke: color, par-break: false)[
     #body
   ]
 }
