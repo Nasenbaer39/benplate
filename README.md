@@ -39,6 +39,16 @@ This template exports the `thesis` function, which takes the following named arg
 - `math-font (str)`: The font of equations. Defaults to `"Libertinus Math"`.
 - `body-size (length)`: The size of the body text. Defaults to `11pt`.
 - `accent-color (color)`: The color of links, citations and equation references. Defaults to the exported `accent-color`.
+- `print (bool)`: Whether the document is laid out for printing. If `true`, the inner margin is wider than the outer one to leave room for the binding. If `false`, the text is centered on the page, which is easier to read on a screen. The line and page breaks are the same in both cases. Defaults to `true`.
+
+  The template's `main.typ` reads this setting from the command line, so you can create both versions of your document without editing it:
+
+  ```sh
+  typst compile main.typ thesis-print.pdf
+  typst compile main.typ thesis-digital.pdf --input print=false
+  ```
+
+  In the Typst web app, where no inputs can be passed, the document is laid out for printing unless you replace the line with `print: false`.
 - `frontmatter (content)`: All content that should be included in front of the first chapter of the document.
 - `appendix (content)`: Optional content for the documents appendix.
 - `backmatter (content)`: All content that should be included at the end of the document.

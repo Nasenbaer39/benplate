@@ -18,6 +18,7 @@
   math-font: "Libertinus Math",
   body-size: 11pt,
   accent-color: accent-color,
+  print: false,
   frontmatter: none,
   appendix: none,
   backmatter: none,
@@ -91,12 +92,12 @@
 
   set page(
     paper: "a4",
-    margin: (
-      bottom: 3cm,
-      top: 4cm,
-      inside: 4cm,
-      outside: 3cm,
-    ),
+    // Leave room for the binding in print, otherwise center the text on the page
+    margin: if print {
+      (bottom: 3cm, top: 4cm, inside: 4cm, outside: 3cm)
+    } else {
+      (bottom: 3cm, top: 4cm, x: 3.5cm)
+    },
     header: context {
       // Only show headers on non-empty pages of the body, except where a chapter starts
       let page-num = here().page()
