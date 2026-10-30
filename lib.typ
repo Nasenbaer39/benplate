@@ -226,7 +226,10 @@
   /*---------[Equations]--------*/
 
   // Setup custom numbering of math functions: (chapter.number)
-  set math.equation(number-align: bottom + end, supplement: none, numbering: in-chapter("(C.1)"))
+  set math.equation(number-align: bottom + end, supplement: none, numbering: (..n) => text(
+    font: body-font,
+    in-chapter("(C.1)")(..n),
+  ))
 
   /*--------[References]--------*/
 
