@@ -1,4 +1,4 @@
-#import "@preview/hydra:0.6.2": hydra
+#import "@preview/hydra:0.6.3": hydra
 
 #import "src/utils.typ": *
 
