@@ -11,41 +11,44 @@
   accent-color: rgb(165, 28, 48),
   date-format: "[day].[month].[year]",
 ) = {
-  set align(center + horizon)
-  set par(leading: 15pt)
-  page(
-    margin: (left: 40mm, right: 40mm, top: 50mm, bottom: 50mm),
-  )[
-    #text(fill: accent-color, 20pt)[#university]\
-    #text(weight: "semibold", 15pt)[
-      Faculty of #faculty\
-      Department of #field
-    ]
+  page(margin: (x: 40mm, y: 50mm))[
+    #show title: it => text(17pt, weight: "regular", tracking: 1pt, hyphenate: false, upper(it))
 
-    #v(40pt)
-    #text(13pt)[#type]
+    #set align(center)
+    #set par(leading: 15pt, justify: false)
 
-    #v(30pt)
-    #line(length: 100%, stroke: (thickness: 0.5pt))
-    #v(7pt)#title()#v(11pt)
-    #line(length: 100%, stroke: (thickness: 0.5pt))
+    #grid(
+      rows: (auto, 1fr, auto, auto),
+      [
+        #text(20pt, accent-color, university)\
+        #text(15pt, weight: "semibold")[
+          Faculty of #faculty\
+          Department of #field
+        ]
+      ],
+      align(horizon, text(13pt, type)),
+      [
+        #block(width: 100%, stroke: (y: 0.5pt), inset: (y: 2.2em), title())
 
+        #v(6em)
+      ],
+      [
+        submitted by\
+        #author\
+        #date.display(date-format)
 
-    #v(40pt)
-    submitted by\
-    #author\
-    #date.display(date-format)
+        #v(3em)
 
-    #v(40pt)
+        *Advisor:*\
+        #advisor
 
-    *Advisor:*\
-    #advisor
+        #v(3em)
 
-    #v(40pt)
-
-    *Reviewers:*\
-    #first-reviewer\
-    #second-reviewer
+        *Reviewers:*\
+        #first-reviewer\
+        #second-reviewer
+      ],
+    )
   ]
 
   pagebreak(weak: true, to: "odd")

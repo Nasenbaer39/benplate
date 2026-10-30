@@ -36,7 +36,7 @@
 
   set document(title: title, author: author, date: date)
 
-  show std.title: it => text(font: heading-font, 17pt, weight: "regular", tracking: 1pt, upper(it))
+  show std.title: it => text(font: heading-font, it)
 
   let in-body = state("in-body", false)
 
