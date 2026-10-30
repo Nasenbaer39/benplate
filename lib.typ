@@ -10,11 +10,11 @@
 
 /*---------[Math Font]----------*/
 
-// Libertinus, with script letters from New Computer Modern, which also serves as a fallback
+// Libertinus, with script letters and integrals from New Computer Modern, which also serves as a fallback
 #let math-font = (
   (
     name: "New Computer Modern Math",
-    covers: regex("[\u{1D49C}-\u{1D503}\u{212C}\u{2130}\u{2131}\u{210B}\u{2110}\u{2112}\u{2133}\u{211B}\u{212F}\u{210A}\u{2134}]"),
+    covers: regex("[\u{1D49C}-\u{1D503}\u{212C}\u{2130}\u{2131}\u{210B}\u{2110}\u{2112}\u{2133}\u{211B}\u{212F}\u{210A}\u{2134}\u{222B}-\u{2233}]"),
   ),
   "Libertinus Math",
   "New Computer Modern Math",
@@ -42,8 +42,6 @@
 
   let h1-size = 22pt
   let h2-size = 14pt
-  let h3-size = body-size
-  let h4-size = body-size
   let caption-size = body-size - 1pt
   let caption-font = if caption-font == auto { body-font } else { caption-font }
 
@@ -52,8 +50,6 @@
   set document(title: title, author: author, date: date)
 
   show std.title: it => text(font: heading-font, it)
-
-  let in-body = state("in-body", false)
 
   // Use measures to define text layout
   set text(font: body-font, size: body-size, lang: lang)
@@ -67,13 +63,9 @@
     inset: 0.9em,
   )
 
-  // add slanted integrals via New Computer Modern Math
-  show math.integral: text(font: "New Computer Modern Math", $integral$)
-
   /*----[Fancy Hydra-Header]----*/
 
   let custom-header(title, dir, it) = {
-    set text(style: "oblique")
     stack(
       dir: dir,
       [
@@ -130,18 +122,18 @@
       }
 
       // select header type based on page number
-      if calc.even(here().page()) {
-        align(left, emph(hydra(1, display: (_, it) => {
+      if calc.even(page-num) {
+        align(left, hydra(1, display: (_, it) => {
           custom-header("Chapter", rtl, it) // Chapter title on the left of even pages
-        })))
+        }))
       } else {
-        align(right, emph(hydra(
+        align(right, hydra(
           2,
           display: (_, it) => {
             custom-header("Section", ltr, it) // Section title on the right of odd pages
           },
           skip-starting: false,
-        )))
+        ))
       }
     },
     // Show page numbers in the footer outside the body, where there is no header
@@ -168,24 +160,27 @@
   }
 
   show heading.where(level: 1): it => [
+    // Reset figure and equation numbering on every chapter start
+    #for kind in (image, table, raw, "code") {
+      counter(figure.where(kind: kind)).update(0)
+    }
+    #counter(math.equation).update(0)
+
+    // Start chapter headings on a new page
+    #metadata(none) <benplate-break>
+    #pagebreak(weak: true, to: "odd")
+
     #set text(size: h1-size, weight: "medium", font: heading-font)
     #set align(right)
 
-    #if in-body.get() and it.numbering != none {
+    #if it.numbering != none {
       v(30pt)
-      let heading-number = text(
-        counter(heading).display(),
-        size: 26pt,
+      box(
+        height: 30pt,
+        stroke: (left: 0.75pt),
+        inset: (left: 0.75em),
+        align(horizon, text(26pt, counter(heading).display())),
       )
-      box[
-        #set align(horizon)
-        #stack(
-          dir: ltr,
-          line(length: 30pt, angle: 90deg, stroke: (thickness: 0.75pt)),
-          h(0.75em),
-          heading-number,
-        )
-      ]
     }
 
     #it.body
@@ -193,9 +188,8 @@
   ]
 
   show heading.where(level: 2): it => { text(size: h2-size, it) }
-  show heading.where(level: 3): it => { text(size: h3-size, it) }
-  show heading.where(level: 4): it => { text(size: h4-size, weight: "semibold", it.body) + h(1em) }
-  show heading.where(level: 5): it => { text(size: h4-size, weight: "semibold", it.body) }
+  show heading.where(level: 4): it => { text(weight: "semibold", it.body) + h(1em) }
+  show heading.where(level: 5): it => { text(weight: "semibold", it.body) }
 
   /*----------[Figures]---------*/
 
@@ -279,11 +273,10 @@
   // Give different types of references a custom style
   show ref: it => {
     let e = it.element
+    if e == none { return it }
 
-    if e == none {
-      it
-      // color figure numbering, but not the supplement in front of it
-    } else if e.func() == figure {
+    // color figure numbering, but not the supplement in front of it
+    if e.func() == figure {
       show regex("\u{a0}.+"): set text(accent-color)
 
       if e.kind == "subfigure" {
@@ -316,29 +309,9 @@
     }
   }
 
-  /*-------[Chapter Start]------*/
-
-  show heading.where(level: 1): it => {
-    // Reset figure and equation numbering on every chapter start
-    for kind in (image, table, raw, "code") {
-      counter(figure.where(kind: kind)).update(0)
-    }
-
-    counter(figure).update(0)
-    counter(math.equation).update(0)
-
-    // Start chapter headings on a new page
-    [#metadata(none) <benplate-break>]
-    pagebreak(weak: true, to: "odd")
-
-    it
-  }
-
   //===========================//
   //------ Front Matter -------//
   //===========================//
-
-  in-body.update(false)
 
   set page(numbering: "i")
 
@@ -351,7 +324,6 @@
   //----------- Body ----------//
   //===========================//
 
-  in-body.update(true)
   [#metadata(none) <benplate-body-start>]
 
   set page(numbering: "1")
@@ -377,7 +349,7 @@
   appendix
 
   [#metadata(none) <benplate-body-end>]
-  in-body.update(false)
+  set heading(numbering: none)
 
   //===========================//
   //------- Back Matter -------//
