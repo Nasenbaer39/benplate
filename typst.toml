@@ -1,6 +1,6 @@
 [package]
 name = "benplate"
-version = "0.1.0"
+version = "0.2.0"
 entrypoint = "lib.typ"
 authors = ["Ben Dierks"]
 license = "MIT"
@@ -9,6 +9,7 @@ keywords = ["thesis"]
 categories = ["paper", "thesis", "report"]
 repository = "https://github.com/Nasenbaer39/benplate"
 compiler = "0.14.0"
+exclude = ["CHANGELOG.md"]
 
 [template]
 path = "template"

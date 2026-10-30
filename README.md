@@ -36,11 +36,11 @@ This template exports the `thesis` function, which takes the following named arg
 - `lang (str)`: The language of the document, used for hyphenation and Typst's built-in terms. Defaults to `"en"`.
 - `body-font (str)`: The font of the body text. Defaults to `"IBM Plex Sans"`.
 - `heading-font (str)`: The font of chapter headings and the title. Defaults to `"IBM Plex Serif"`.
-- `caption-font (str)`: The font of figure captions. Defaults to `auto`, which uses the `body-font`.
+- `caption-font (str, auto)`: The font of figure captions. Defaults to `auto`, which uses the `body-font`.
 - `math-font (str, array)`: The font of equations, or a list of fonts to try in order. Defaults to the exported `math-font`, which uses Libertinus Math with script letters from New Computer Modern Math.
 - `code-font (str)`: The font of raw text and code listings. If it isn't installed, `DejaVu Sans Mono` is used. Defaults to `"IBM Plex Mono"`.
 - `body-size (length)`: The size of the body text. Defaults to `11pt`.
-- `accent-color (color)`: The color of links, citations and equation references. Defaults to the exported `accent-color`.
+- `accent-color (color)`: The color of links, citations and references to figures, equations and sections. Defaults to the exported `accent-color`.
 - `print (bool)`: Whether the document is laid out for printing. If `true`, the inner margin is wider than the outer one to leave room for the binding. If `false`, the text is centered on the page, which is easier to read on a screen. The line and page breaks are the same in both cases. Defaults to `false`.
 
   The template's `main.typ` reads this setting from the command line, so you can create both versions of your document without editing it:
@@ -59,12 +59,12 @@ While both the `frontmatter` and `backmatter` can take arbitrary content, the te
 
 ### Frontmatter
 
-To start off, I recommend using the `default-frontmatter` function to generate default configuration for the frontmatter. If you are interested in truly making this template your own, you can check out the [customization section](#customization). `default-frontmatter` requires the following parameters:
+To start off, I recommend using the `default-frontmatter` function to generate default configuration for the frontmatter. If you are interested in truly making this template your own, you can check out the [customization section](#customization). `default-frontmatter` takes the following arguments:
 
 - `university (str)`: The name of your University.
 - `faculty (str)`: The responsible faculty for your study.
 - `field (str)`: Your field of study.
-- `type (str)`: The type of document your writing (e.g., Bachelor's Thesis, Master's Thesis, PhD Thesis).
+- `type (str)`: The type of document you're writing (e.g., Bachelor's Thesis, Master's Thesis, PhD Thesis).
 - `author (str)`: Your name.
 - `date (datetime)`: The submission date of the document. If not explicitly specified, `datetime.today()` is used.
 - `city (str)`: The city where the document was submitted.
@@ -89,7 +89,7 @@ I created the default functions above so that the final document adheres to cert
 
 For that reason, the `default-frontmatter` and `default-backmatter` functions are not part of the package itself. Their implementation is copied into your project when you initialize it as explained in the [getting started section](#getting-started). This should make it relatively straightforward to change these parts of the document.
 
-Fonts, the text size, the accent color and the language can be changed via the arguments of the `thesis` function. In case you want to customize the other parts of the template, like paragraph spacing, heading styles, etc., you need to edit the template locally. This can be done by locating your [typst data directory](https://github.com/typst/packages/tree/main?tab=readme-ov-file#local-packages) and copying the contents of [this repository](https://github.com/Nasenbaer39/benplate) to `{data-dir}/typst/packages/local/benplate/0.1.0`. This will create a local copy of this template that you are free to edit.
+Fonts, the text size, the accent color, the language and the print layout can be changed via the arguments of the `thesis` function. In case you want to customize the other parts of the template, like paragraph spacing, heading styles, etc., you need to edit the template locally. This can be done by locating your [typst data directory](https://github.com/typst/packages/tree/main?tab=readme-ov-file#local-packages) and copying the contents of [this repository](https://github.com/Nasenbaer39/benplate) to `{data-dir}/typst/packages/local/benplate/0.2.0`. This will create a local copy of this template that you are free to edit.
 
 If you believe that there are configuration options that should be available from the get go, feel free to open an issue on GitHub. This of course also applies to potential inconsistencies or bugs in the template.
 
@@ -104,7 +104,7 @@ First, the template provides three wrappers around functions of the [drafting](h
 The `todo` function creates a colored box around the content you provide it with. Optionally, you can also specify a `color` and a `label` for the box, with default values of `yellow` and `"TODO"`, respectively.
 
 ```typ
-#import "@preview/benplate:0.1.0": todo
+#import "@preview/benplate:0.2.0": todo
 
 #todo[This is a TODO box]
 #todo(color: red, label: "ERROR")[This is a custom ERROR box]
@@ -113,15 +113,15 @@ The `todo` function creates a colored box around the content you provide it with
 The `note` function creates a box in the margins of the document, connecting to the place where it is used. Optionally, you can also specify a `color` for the box, with a default value of `red`.
 
 ```typ
-#import "@preview/benplate:0.1.0": note
+#import "@preview/benplate:0.2.0": note
 
 #note[Something really important that should be addressed]
 ```
 
-The `comment` function inserts the content it is provided with as colored text into the document. The `initials` of the person making the comment, as well as the `color` it is displayed in can be optionally specified.
+The `comment` function draws a colored box around the content it is provided with, inline with the surrounding text. Optionally, you can also specify the `initials` of the person making the comment, which are shown in front of the box, and a `color`, with a default value of dark blue.
 
 ```typ
-#import "@preview/benplate:0.1.0": comment
+#import "@preview/benplate:0.2.0": comment
 
 #comment(initials: "DS", color: green)[This is a comment]
 ```
@@ -130,10 +130,10 @@ All the functions that ship with the drafting package are also available via the
 
 ### Subfigures
 
-Subfigures can be created using the `subfigure` function. Its usage is exactly the same as the [default figure function](https://typst.app/docs/reference/model/figure/). To work properly, it has to be placed inside a `figures` body.
+Subfigures can be created using the `subfigure` function. Its usage is exactly the same as the [default figure function](https://typst.app/docs/reference/model/figure/). To work properly, it has to be placed inside the body of a `figure`.
 
 ```typ
-#import "@preview/benplate:0.1.0": subfigure
+#import "@preview/benplate:0.2.0": subfigure
 
 #figure(
   grid(
@@ -145,14 +145,14 @@ Subfigures can be created using the `subfigure` function. Its usage is exactly t
 )
 ```
 
-By assigning a unique identifier to each subfigure, they can also be referenced later in the document like regular figures.
+By assigning a unique identifier to each subfigure, they can also be referenced later in the document like regular figures, which displays them as, e.g., "Figure 1.1a".
 
 ### Helper Functions
 
 The `prose` function is a shorthand to create a citation with the prose format.
 
 ```typ
-#import "@preview/benplate:0.1.0": prose
+#import "@preview/benplate:0.2.0": prose
 
 // The following lines are equivalent
 #prose[@some-citation]

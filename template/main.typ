@@ -1,4 +1,4 @@
-#import "@preview/benplate:0.1.0": accent-color, thesis, todo
+#import "@preview/benplate:0.2.0": accent-color, thesis, todo
 #import "frontmatter.typ": *
 #import "backmatter.typ": *
 
