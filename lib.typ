@@ -14,7 +14,7 @@
   lang: "en",
   body-font: "IBM Plex Sans",
   heading-font: "IBM Plex Serif",
-  caption-font: "IBM Plex Serif",
+  caption-font: auto,
   math-font: "Libertinus Math",
   body-size: 11pt,
   accent-color: accent-color,
@@ -30,7 +30,8 @@
   let h2-size = 14pt
   let h3-size = body-size
   let h4-size = body-size
-  let caption-size = 10pt
+  let caption-size = body-size - 1pt
+  let caption-font = if caption-font == auto { body-font } else { caption-font }
 
   /*-----[General Settings]-----*/
 
@@ -194,33 +195,30 @@
   show figure.where(kind: "subfigure"): set figure(supplement: [], numbering: "(a)", outlined: false, placement: none)
 
   show figure.caption: it => {
-    set text(font: (caption-font), size: caption-size)
+    set text(font: caption-font, size: caption-size)
 
-    layout(size => context {
-      // Get length of caption text
-      let caption-length = measure(
-        ..size,
-        it.supplement + it.separator + it.body,
-      )
-
-      // Center caption if less than one line
-      if caption-length.width < size.width {
-        set align(center)
-      }
+    layout(size => {
+      let number = it.counter.display(it.numbering)
 
       // Make figure title bold and caption italic
-      context {
-        set align(left)
+      let caption = {
         if it.kind == "subfigure" {
           // don't display separator if it's a subfigure
-          strong[#it.supplement #it.counter.display(it.numbering) ]
+          strong[#it.supplement #number ]
         } else {
-          strong[#it.supplement #it.counter.display(it.numbering)#it.separator]
+          strong[#it.supplement #number#it.separator]
         }
         emph(it.body)
 
         // add spacing between mainfigure caption and subfigure
-        if it.kind == "subfigure" { v(0.75em) }
+        if it.kind == "subfigure" and it.position == bottom { v(0.75em) }
+      }
+
+      // Center captions that fit on one line, longer ones span the full width
+      if measure(caption).width > size.width {
+        block(width: 100%, align(left, caption))
+      } else {
+        caption
       }
     })
   }
@@ -244,15 +242,23 @@
 
     if e == none {
       it
-      // reference subfigures as "Figure {chapter}.{figure}{subfigure}"
-    } else if e.func() == figure and e.kind == "subfigure" {
-      let parent = query(figure.where(outlined: true).before(e.location())).last()
-      let loc = parent.location()
-      [Figure~]
-      link(e.location(), {
-        numbering(chapter-numbering.at(loc) + ".1", counter(heading).at(loc).first(), ..parent.counter.at(loc))
-        numbering("a", ..e.counter.at(e.location()))
-      })
+      // color figure numbering, but not the supplement in front of it
+    } else if e.func() == figure {
+      show regex("\u{a0}.+"): set text(accent-color)
+
+      if e.kind == "subfigure" {
+        // reference subfigures as "{supplement} {chapter}.{figure}{subfigure}"
+        let parent = query(figure.where(outlined: true).before(e.location())).last()
+        let loc = parent.location()
+        parent.supplement
+        link(e.location(), {
+          [~]
+          numbering(chapter-numbering.at(loc) + ".1", counter(heading).at(loc).first(), ..parent.counter.at(loc))
+          numbering("a", ..e.counter.at(e.location()))
+        })
+      } else {
+        it
+      }
       // color equation numbering, but not parentheses
     } else if e.func() == math.equation {
       show regex("[^()]+"): set text(accent-color)

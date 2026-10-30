@@ -11,8 +11,8 @@
   date: date,
   lang: "en",
   accent-color: accent-color,
-  // Use `typst compile main.typ --input print=false` for a version centered for screens
-  print: sys.inputs.at("print", default: "true") != "false",
+  // Use `typst compile main.typ --input print=true` for a version with room for the binding
+  print: sys.inputs.at("print", default: "false") == "true",
   frontmatter: default-frontmatter(
     university: "Your University",
     faculty: "Your Faculty",

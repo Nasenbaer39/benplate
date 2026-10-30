@@ -35,20 +35,20 @@ This template exports the `thesis` function, which takes the following named arg
 - `lang (str)`: The language of the document, used for hyphenation and Typst's built-in terms. Defaults to `"en"`.
 - `body-font (str)`: The font of the body text. Defaults to `"IBM Plex Sans"`.
 - `heading-font (str)`: The font of headings and the title. Defaults to `"IBM Plex Serif"`.
-- `caption-font (str)`: The font of figure captions. Defaults to `"IBM Plex Serif"`.
+- `caption-font (str)`: The font of figure captions. Defaults to `auto`, which uses the `body-font`.
 - `math-font (str)`: The font of equations. Defaults to `"Libertinus Math"`.
 - `body-size (length)`: The size of the body text. Defaults to `11pt`.
 - `accent-color (color)`: The color of links, citations and equation references. Defaults to the exported `accent-color`.
-- `print (bool)`: Whether the document is laid out for printing. If `true`, the inner margin is wider than the outer one to leave room for the binding. If `false`, the text is centered on the page, which is easier to read on a screen. The line and page breaks are the same in both cases. Defaults to `true`.
+- `print (bool)`: Whether the document is laid out for printing. If `true`, the inner margin is wider than the outer one to leave room for the binding. If `false`, the text is centered on the page, which is easier to read on a screen. The line and page breaks are the same in both cases. Defaults to `false`.
 
   The template's `main.typ` reads this setting from the command line, so you can create both versions of your document without editing it:
 
   ```sh
-  typst compile main.typ thesis-print.pdf
-  typst compile main.typ thesis-digital.pdf --input print=false
+  typst compile main.typ thesis-digital.pdf
+  typst compile main.typ thesis-print.pdf --input print=true
   ```
 
-  In the Typst web app, where no inputs can be passed, the document is laid out for printing unless you replace the line with `print: false`.
+  In the Typst web app, where no inputs can be passed, the text is centered on the page unless you replace the line with `print: true`.
 - `frontmatter (content)`: All content that should be included in front of the first chapter of the document.
 - `appendix (content)`: Optional content for the documents appendix.
 - `backmatter (content)`: All content that should be included at the end of the document.
