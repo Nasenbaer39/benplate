@@ -200,6 +200,20 @@
     it
   }
 
+  // Draw horizontal rules only, unless a table has its own stroke
+  let table-stroke = (_, y) => if y == 0 { (bottom: 0.5pt) }
+  set table(stroke: table-stroke)
+
+  show table: it => {
+    if it.stroke != table-stroke { return it }
+
+    layout(size => block(
+      width: measure(it, width: size.width).width,
+      stroke: (y: 0.75pt),
+      it,
+    ))
+  }
+
   show figure.where(kind: "code"): set figure(supplement: [Algorithm])
   show figure.where(kind: "subfigure"): set figure(supplement: [], numbering: "(a)", outlined: false, placement: none)
 
