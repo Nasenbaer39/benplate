@@ -20,6 +20,7 @@ This template uses the following selection of fonts:
 
 - [IBM Plex Serif](https://fonts.google.com/specimen/IBM+Plex+Serif)
 - [IBM Plex Sans](https://fonts.google.com/specimen/IBM+Plex+Sans)
+- [IBM Plex Mono](https://fonts.google.com/specimen/IBM+Plex+Mono)
 - [Libertinus Math](https://github.com/alerque/libertinus) (ships with Typst)
 - [STIX Two Math](https://github.com/stipub/stixfonts) (optional, only used for slanted integral signs)
 
@@ -34,9 +35,10 @@ This template exports the `thesis` function, which takes the following named arg
 - `date (datetime)`: The creation date of the document. If not explicitly specified, `datetime.today()` is used.
 - `lang (str)`: The language of the document, used for hyphenation and Typst's built-in terms. Defaults to `"en"`.
 - `body-font (str)`: The font of the body text. Defaults to `"IBM Plex Sans"`.
-- `heading-font (str)`: The font of headings and the title. Defaults to `"IBM Plex Serif"`.
+- `heading-font (str)`: The font of chapter headings and the title. Defaults to `"IBM Plex Serif"`.
 - `caption-font (str)`: The font of figure captions. Defaults to `auto`, which uses the `body-font`.
 - `math-font (str)`: The font of equations. Defaults to `"Libertinus Math"`.
+- `code-font (str)`: The font of raw text and code listings. If it isn't installed, `DejaVu Sans Mono` is used. Defaults to `"IBM Plex Mono"`.
 - `body-size (length)`: The size of the body text. Defaults to `11pt`.
 - `accent-color (color)`: The color of links, citations and equation references. Defaults to the exported `accent-color`.
 - `print (bool)`: Whether the document is laid out for printing. If `true`, the inner margin is wider than the outer one to leave room for the binding. If `false`, the text is centered on the page, which is easier to read on a screen. The line and page breaks are the same in both cases. Defaults to `false`.

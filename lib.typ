@@ -16,6 +16,7 @@
   heading-font: "IBM Plex Serif",
   caption-font: auto,
   math-font: "Libertinus Math",
+  code-font: "IBM Plex Mono",
   body-size: 11pt,
   accent-color: accent-color,
   print: false,
@@ -44,6 +45,14 @@
   // Use measures to define text layout
   set text(font: body-font, size: body-size, lang: lang)
   show math.equation: set text(font: math-font, fallback: false)
+  show raw: set text(font: (code-font, "DejaVu Sans Mono"))
+  show raw.where(block: true): block.with(
+    width: 100%,
+    fill: luma(98%),
+    stroke: 0.5pt + luma(70%),
+    radius: 3pt,
+    inset: 0.9em,
+  )
 
   // add slanted integrals if STIX Two Math is installed
   show math.integral: text(font: ("STIX Two Math", math-font), $integral$)
