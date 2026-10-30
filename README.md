@@ -21,8 +21,8 @@ This template uses the following selection of fonts:
 - [IBM Plex Serif](https://fonts.google.com/specimen/IBM+Plex+Serif)
 - [IBM Plex Sans](https://fonts.google.com/specimen/IBM+Plex+Sans)
 - [IBM Plex Mono](https://fonts.google.com/specimen/IBM+Plex+Mono)
-- [Libertinus Math](https://github.com/alerque/libertinus) (ships with Typst)
-- [STIX Two Math](https://github.com/stipub/stixfonts) (optional, only used for slanted integral signs)
+- [Libertinus Math](https://github.com/alerque/libertinus)
+- [New Computer Modern Math](https://ctan.org/pkg/newcomputermodern) (ships with Typst, used for script letters and integral signs, and as a fallback if Libertinus Math isn't installed)
 
 If you use this template locally, you can install the fonts on your system via the links above. In case you're using the Typst web app, all fonts are available out of the box. All fonts can also be changed via the arguments of the `thesis` function.
 
@@ -37,7 +37,7 @@ This template exports the `thesis` function, which takes the following named arg
 - `body-font (str)`: The font of the body text. Defaults to `"IBM Plex Sans"`.
 - `heading-font (str)`: The font of chapter headings and the title. Defaults to `"IBM Plex Serif"`.
 - `caption-font (str)`: The font of figure captions. Defaults to `auto`, which uses the `body-font`.
-- `math-font (str)`: The font of equations. Defaults to `"Libertinus Math"`.
+- `math-font (str, array)`: The font of equations, or a list of fonts to try in order. Defaults to the exported `math-font`, which uses Libertinus Math with script letters from New Computer Modern Math.
 - `code-font (str)`: The font of raw text and code listings. If it isn't installed, `DejaVu Sans Mono` is used. Defaults to `"IBM Plex Mono"`.
 - `body-size (length)`: The size of the body text. Defaults to `11pt`.
 - `accent-color (color)`: The color of links, citations and equation references. Defaults to the exported `accent-color`.

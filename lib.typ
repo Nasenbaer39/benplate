@@ -7,6 +7,19 @@
 
 #let accent-color = rgb(165, 28, 48)
 
+
+/*---------[Math Font]----------*/
+
+// Libertinus, with script letters from New Computer Modern, which also serves as a fallback
+#let math-font = (
+  (
+    name: "New Computer Modern Math",
+    covers: regex("[\u{1D49C}-\u{1D503}\u{212C}\u{2130}\u{2131}\u{210B}\u{2110}\u{2112}\u{2133}\u{211B}\u{212F}\u{210A}\u{2134}]"),
+  ),
+  "Libertinus Math",
+  "New Computer Modern Math",
+)
+
 #let thesis(
   title: "",
   author: "",
@@ -15,7 +28,7 @@
   body-font: "IBM Plex Sans",
   heading-font: "IBM Plex Serif",
   caption-font: auto,
-  math-font: "Libertinus Math",
+  math-font: math-font,
   code-font: "IBM Plex Mono",
   body-size: 11pt,
   accent-color: accent-color,
@@ -54,8 +67,8 @@
     inset: 0.9em,
   )
 
-  // add slanted integrals if STIX Two Math is installed
-  show math.integral: text(font: ("STIX Two Math", math-font), $integral$)
+  // add slanted integrals via New Computer Modern Math
+  show math.integral: text(font: "New Computer Modern Math", $integral$)
 
   /*----[Fancy Hydra-Header]----*/
 
